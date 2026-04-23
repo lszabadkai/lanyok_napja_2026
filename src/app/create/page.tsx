@@ -14,12 +14,9 @@ import {
   type Card,
 } from "@/lib/db";
 
-type Difficulty = "beginner" | "intermediate" | "advanced";
-
 export default function CreatePage() {
   const router = useRouter();
   const [title, setTitle] = useState("");
-  const [difficulty, setDifficulty] = useState<Difficulty>("intermediate");
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState("");
   const [error, setError] = useState("");
@@ -35,11 +32,11 @@ export default function CreatePage() {
     setStatus("Extracting words...");
 
     try {
-      const result = extractWords(text, difficulty);
+      const result = extractWords(text);
 
       if (result.words.length === 0) {
         setError(
-          `No words found after filtering. Found ${result.totalFound} unique words, ${result.afterStopWords} after removing stop words, 0 matching "${difficulty}" difficulty. Try a different difficulty level or more text.`
+          `No words found after filtering. Found ${result.totalFound} unique words, ${result.afterStopWords} after removing stop words. Try adding more text.`
         );
         setLoading(false);
         return;
@@ -53,7 +50,7 @@ export default function CreatePage() {
       const translations: Record<string, string> = {};
       const uncached: string[] = [];
 
-      for (const word of result.words) {
+      for (const { word } of result.words) {
         const cached = await getCachedTranslation(word, "en", "hu");
         if (cached) {
           translations[word] = cached;
@@ -83,16 +80,17 @@ export default function CreatePage() {
         title: title.trim(),
         sourceLang: "en",
         targetLang: "hu",
-        difficulty,
+        difficulty: "mixed",
         createdAt: Date.now(),
         cardCount: result.words.length,
       };
 
-      const cards: Card[] = result.words.map((word) => ({
+      const cards: Card[] = result.words.map(({ word, difficulty }) => ({
         id: crypto.randomUUID(),
         deckId,
         front: word,
         back: translations[word] || word,
+        difficulty,
         known: false,
         lastStudied: null,
         createdAt: Date.now(),
@@ -139,35 +137,6 @@ export default function CreatePage() {
         <div className="rounded-xl border border-foreground/10 bg-foreground/[0.02] p-3 text-sm text-foreground/50">
           English → Hungarian
         </div>
-      </div>
-
-      {/* Difficulty */}
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-foreground/70">
-          Difficulty
-        </label>
-        <div className="flex gap-2">
-          {(["beginner", "intermediate", "advanced"] as Difficulty[]).map(
-            (d) => (
-              <button
-                key={d}
-                onClick={() => setDifficulty(d)}
-                className={`flex-1 py-2 rounded-lg text-sm capitalize transition-colors ${
-                  difficulty === d
-                    ? "bg-blue-500 text-white font-medium"
-                    : "bg-foreground/5 text-foreground/60 hover:bg-foreground/10"
-                }`}
-              >
-                {d}
-              </button>
-            )
-          )}
-        </div>
-        <p className="text-xs text-foreground/40">
-          {difficulty === "beginner" && "Only the most common ~500 English words"}
-          {difficulty === "intermediate" && "Common ~2000 English words"}
-          {difficulty === "advanced" && "All words (no frequency filter)"}
-        </p>
       </div>
 
       {/* Text Source */}

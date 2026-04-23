@@ -1,11 +1,13 @@
 import { openDB, type DBSchema, type IDBPDatabase } from "idb";
 
+export type Difficulty = "beginner" | "intermediate" | "advanced" | "mixed";
+
 export interface Deck {
   id: string;
   title: string;
   sourceLang: string;
   targetLang: string;
-  difficulty: "beginner" | "intermediate" | "advanced";
+  difficulty: Difficulty;
   createdAt: number;
   cardCount: number;
 }
@@ -18,6 +20,7 @@ export interface Card {
   known: boolean;
   lastStudied: number | null;
   createdAt: number;
+  difficulty?: "beginner" | "intermediate" | "advanced";
 }
 
 export interface CachedTranslation {

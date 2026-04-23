@@ -58,7 +58,13 @@ function DeckDetail() {
     intermediate: "border-l-amber-500 bg-amber-500/5",
     advanced: "border-l-red-500 bg-red-500/5",
   };
-  const cardAccent = difficultyStyles[deck?.difficulty ?? ""] ?? "";
+
+  function cardAccent(card: Card): string {
+    if (card.known) return "rainbow-sparkle";
+    const diff = card.difficulty ?? deck?.difficulty;
+    if (diff && diff !== "mixed") return `border-l-2 ${difficultyStyles[diff] ?? ""}`;
+    return "border-l-2 bg-foreground/[0.02]";
+  }
 
   return (
     <div className="space-y-6">
@@ -118,11 +124,7 @@ function DeckDetail() {
           {cards.map((card) => (
             <div
               key={card.id}
-              className={`flex items-center justify-between py-2 px-3 rounded-lg border-l-2 ${
-                card.known
-                  ? "bg-green-500/10 text-green-700 dark:text-green-400 border-l-green-500"
-                  : `${cardAccent}`
-              }`}
+              className={`flex items-center justify-between py-2 px-3 rounded-lg ${cardAccent(card)}`}
             >
               <span className="font-medium">{card.front}</span>
               <span className="text-foreground/50">{card.back}</span>

@@ -153,8 +153,13 @@ const COMMON_2000_EXTRA = new Set([
   "weather", "wedding", "weight", "wing", "wood", "youth",
 ]);
 
+export interface TaggedWord {
+  word: string;
+  difficulty: "beginner" | "intermediate" | "advanced";
+}
+
 export interface ProcessedWords {
-  words: string[];
+  words: TaggedWord[];
   totalFound: number;
   afterStopWords: number;
   afterDifficulty: number;
@@ -162,7 +167,6 @@ export interface ProcessedWords {
 
 export function extractWords(
   text: string,
-  difficulty: "beginner" | "intermediate" | "advanced"
 ): ProcessedWords {
   // Tokenize: split on non-alpha, lowercase, deduplicate
   const tokens = text
@@ -183,29 +187,26 @@ export function extractWords(
   const filtered = [...freq.entries()].filter(([w]) => !STOP_WORDS.has(w));
   const afterStopWords = filtered.length;
 
-  // Apply difficulty filter
-  let words: [string, number][];
-  switch (difficulty) {
-    case "beginner":
-      words = filtered.filter(([w]) => COMMON_500.has(w));
-      break;
-    case "intermediate":
-      words = filtered.filter(
-        ([w]) => COMMON_500.has(w) || COMMON_2000_EXTRA.has(w)
-      );
-      break;
-    case "advanced":
-      words = filtered;
-      break;
-  }
+  // Tag each word by difficulty tier
+  const tagged: (TaggedWord & { freq: number })[] = filtered.map(([w, f]) => {
+    let difficulty: "beginner" | "intermediate" | "advanced";
+    if (COMMON_500.has(w)) {
+      difficulty = "beginner";
+    } else if (COMMON_2000_EXTRA.has(w)) {
+      difficulty = "intermediate";
+    } else {
+      difficulty = "advanced";
+    }
+    return { word: w, difficulty, freq: f };
+  });
 
   // Sort by frequency descending
-  words.sort((a, b) => b[1] - a[1]);
+  tagged.sort((a, b) => b.freq - a.freq);
 
   return {
-    words: words.map(([w]) => w),
+    words: tagged.map(({ word, difficulty }) => ({ word, difficulty })),
     totalFound,
     afterStopWords,
-    afterDifficulty: words.length,
+    afterDifficulty: tagged.length,
   };
 }
