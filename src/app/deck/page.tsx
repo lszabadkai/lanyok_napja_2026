@@ -126,8 +126,11 @@ function DeckDetail() {
               key={card.id}
               className={`flex items-center justify-between py-2 px-3 rounded-lg ${cardAccent(card)}`}
             >
-              <span className="font-medium">{card.front}</span>
-              <span className="text-foreground/50">{card.back}</span>
+              <span className="font-medium">
+                {card.known && <span className="mr-1">🦄</span>}
+                {card.front}
+              </span>
+              <span className={card.known ? "text-[#1a1a2e]/60" : "text-foreground/50"}>{card.back}</span>
             </div>
           ))}
         </div>
