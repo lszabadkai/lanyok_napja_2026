@@ -1,4 +1,14 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FlashCards EN→HU
+
+A mobile-first web app for creating English→Hungarian flashcards from any text. Extracts words, translates them, and lets you study with flip cards.
+
+**[Open the app](https://lszabadkai.github.io/lanyok_napja_2026/)**
+
+Scan to open on your phone:
+
+<p align="center">
+  <img src="public/qrcode.png" alt="QR Code" width="256" />
+</p>
 
 ## Getting Started
 
