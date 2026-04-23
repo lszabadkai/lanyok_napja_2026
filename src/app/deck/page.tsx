@@ -90,12 +90,20 @@ function DeckDetail() {
         </div>
       </div>
 
-      <Link
-        href={`/study?deckId=${deckId}`}
-        className="block w-full text-center py-3 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-medium transition-colors"
-      >
-        Study Now
-      </Link>
+      <div className="flex gap-2">
+        <Link
+          href={`/study?deckId=${deckId}`}
+          className="flex-1 text-center py-3 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-medium transition-colors"
+        >
+          Study EN → HU
+        </Link>
+        <Link
+          href={`/study?deckId=${deckId}&reverse=1`}
+          className="flex-1 text-center py-3 rounded-xl bg-purple-500 hover:bg-purple-600 text-white font-medium transition-colors"
+        >
+          Study HU → EN
+        </Link>
+      </div>
 
       <div className="space-y-2">
         <h2 className="text-lg font-semibold">All Cards</h2>

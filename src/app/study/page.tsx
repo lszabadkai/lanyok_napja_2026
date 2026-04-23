@@ -10,6 +10,7 @@ import { playChime } from "@/lib/audio";
 function StudyContent() {
   const searchParams = useSearchParams();
   const deckId = searchParams.get("deckId") ?? "";
+  const reverse = searchParams.get("reverse") === "1";
 
   const [deck, setDeck] = useState<Deck | null>(null);
   const [cards, setCards] = useState<Card[]>([]);
@@ -130,12 +131,19 @@ function StudyContent() {
         >
           ← {deck.title}
         </Link>
-        <button
-          onClick={shuffle}
-          className="text-sm text-foreground/40 hover:text-foreground/60"
-        >
-          🔀 Shuffle
-        </button>
+        <div className="flex items-center gap-3">
+          {reverse && (
+            <span className="text-xs bg-purple-500/20 text-purple-500 px-2 py-1 rounded-full">
+              HU → EN
+            </span>
+          )}
+          <button
+            onClick={shuffle}
+            className="text-sm text-foreground/40 hover:text-foreground/60"
+          >
+            🔀 Shuffle
+          </button>
+        </div>
       </div>
 
       <div className="space-y-1">
@@ -153,8 +161,8 @@ function StudyContent() {
 
       <div className="pt-4">
         <FlashCard
-          front={card.front}
-          back={card.back}
+          front={reverse ? card.back : card.front}
+          back={reverse ? card.front : card.back}
           flipped={flipped}
           onFlip={handleFlip}
         />

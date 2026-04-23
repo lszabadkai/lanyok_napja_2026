@@ -45,7 +45,13 @@ export default function DeckCard({ deck, onDelete }: DeckCardProps) {
           href={`/study?deckId=${deck.id}`}
           className="flex-1 text-center py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white text-sm transition-colors"
         >
-          Study
+          EN→HU
+        </Link>
+        <Link
+          href={`/study?deckId=${deck.id}&reverse=1`}
+          className="flex-1 text-center py-2 rounded-lg bg-purple-500 hover:bg-purple-600 text-white text-sm transition-colors"
+        >
+          HU→EN
         </Link>
       </div>
     </div>
