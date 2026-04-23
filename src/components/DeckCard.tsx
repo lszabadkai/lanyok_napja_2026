@@ -8,9 +8,17 @@ interface DeckCardProps {
   onDelete: (id: string) => void;
 }
 
+const difficultyStyles: Record<string, string> = {
+  beginner: "border-l-green-500 bg-green-500/5",
+  intermediate: "border-l-amber-500 bg-amber-500/5",
+  advanced: "border-l-red-500 bg-red-500/5",
+};
+
 export default function DeckCard({ deck, onDelete }: DeckCardProps) {
+  const accent = difficultyStyles[deck.difficulty] ?? "border-l-foreground/20 bg-foreground/[0.02]";
+
   return (
-    <div className="rounded-xl border border-foreground/10 bg-foreground/[0.02] p-4 flex flex-col gap-2">
+    <div className={`rounded-xl border-l-4 border border-foreground/10 ${accent} p-4 flex flex-col gap-2`}>
       <div className="flex items-start justify-between">
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold text-lg truncate">{deck.title}</h3>

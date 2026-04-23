@@ -53,6 +53,13 @@ function DeckDetail() {
 
   const knownCount = cards.filter((c) => c.known).length;
 
+  const difficultyStyles: Record<string, string> = {
+    beginner: "border-l-green-500 bg-green-500/5",
+    intermediate: "border-l-amber-500 bg-amber-500/5",
+    advanced: "border-l-red-500 bg-red-500/5",
+  };
+  const cardAccent = difficultyStyles[deck?.difficulty ?? ""] ?? "";
+
   return (
     <div className="space-y-6">
       <div className="flex items-start justify-between">
@@ -111,10 +118,10 @@ function DeckDetail() {
           {cards.map((card) => (
             <div
               key={card.id}
-              className={`flex items-center justify-between py-2 px-3 rounded-lg ${
+              className={`flex items-center justify-between py-2 px-3 rounded-lg border-l-2 ${
                 card.known
-                  ? "bg-green-500/10 text-green-700 dark:text-green-400"
-                  : "bg-foreground/[0.02]"
+                  ? "bg-green-500/10 text-green-700 dark:text-green-400 border-l-green-500"
+                  : `${cardAccent}`
               }`}
             >
               <span className="font-medium">{card.front}</span>
