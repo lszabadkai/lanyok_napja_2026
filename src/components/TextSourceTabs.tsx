@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { fetchUrlText } from "@/lib/fetch-url";
+import { assetPath } from "@/lib/base-path";
 
 type Source = "paste" | "url" | "file" | "bundled";
 
@@ -80,7 +81,7 @@ export default function TextSourceTabs({
   async function handleBundled(file: string) {
     setError("");
     try {
-      const res = await fetch(file);
+      const res = await fetch(assetPath(file));
       const data = await res.json();
       onTextReady(data.text);
     } catch {
